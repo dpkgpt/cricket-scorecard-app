@@ -3,17 +3,13 @@ package app.sports.cricket.handlers;
 import app.sports.cricket.constants.HandlerTypes;
 import app.sports.cricket.entities.Ball;
 import app.sports.cricket.entities.Inning;
+import app.sports.cricket.entities.Player;
 
 public abstract class Handler {
-    HandlerRegistry handlerRegistry;
 
-    public Handler(HandlerRegistry handlerRegistry) {
-        this.handlerRegistry = handlerRegistry;
+    public Handler(HandlerTypes handlerType, HandlerRegistry handlerRegistry) {
+        handlerRegistry.addToRegistry(handlerType,this);
     }
 
-    public abstract void handle(Ball ball, Inning inning);
-
-    public void addHandlerToRegistry(HandlerTypes handlerType, Handler handler) {
-        this.handlerRegistry.addToRegistry(handlerType,handler);
-    }
+    public abstract void handle(Ball ball, Inning inning, Player bowler);
 }

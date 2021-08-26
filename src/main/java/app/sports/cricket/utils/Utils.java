@@ -28,8 +28,12 @@ public class Utils {
 
 
         inning.getScorecard().getBattingTeamStats().forEach((p, stats) -> {
-            boolean isPlayerPlaying = p == inning.getOnStrikePlayer() || p == inning.getNonStrikePlayer();
-            String name = p.getName() + (isPlayerPlaying ? "*" : "");
+            String name = p.getName();
+            if(p == inning.getOnStrikePlayer()) {
+                name += "**";
+            } else if(p == inning.getNonStrikePlayer()) {
+                name += "*";
+            }
             appendToStringBuilderWithSpaces(scardStringBuilder, name, PLAYER_NAME_SPACE, DELIM);
             appendToStringBuilderWithSpaces(scardStringBuilder, stats.getRunsScored(), SCORE_SPACE, DELIM);
             appendToStringBuilderWithSpaces(scardStringBuilder, stats.getFours(), RUNS_DESC_SPACE, DELIM);

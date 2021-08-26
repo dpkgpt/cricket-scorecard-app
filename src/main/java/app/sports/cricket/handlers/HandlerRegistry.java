@@ -11,7 +11,7 @@ public class HandlerRegistry {
     public HandlerRegistry() {
         this.handlers = new HashMap<>();
     }
-    public void addToRegistry(HandlerTypes handlerType, Handler handler) {
+    void addToRegistry(HandlerTypes handlerType, Handler handler) {
         this.handlers.put(handlerType,handler);
     }
 

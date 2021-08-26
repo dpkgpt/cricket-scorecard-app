@@ -1,10 +1,8 @@
 package app.sports.cricket.entities;
 
-import app.sports.cricket.constants.BallConfigs;
 import app.sports.cricket.constants.HandlerTypes;
 import app.sports.cricket.handlers.ExtraHandler;
 import app.sports.cricket.handlers.FairDeliveryHandler;
-import app.sports.cricket.handlers.Handler;
 import app.sports.cricket.handlers.HandlerRegistry;
 import app.sports.cricket.handlers.StrikeChangeHandler;
 import app.sports.cricket.handlers.WicketHandler;
@@ -42,32 +40,32 @@ public class Game {
         new WicketHandler(handlerRegistry);
     }
 
-    private void playOver(List<String> over) {
+    private void playOver(Over over) {
+        currentInning.setCurrentBowler(over.getBowler());
         int totalLegalBallsBalledInOver = 0;
         int totalBallsBalled = 0;
-        for (String b : over) {
-            Ball ball = BallConfigs.getBall(b);
+        for (Ball ball : over.getBalls()) {
             if(ball.handlers.contains(HandlerTypes.FAIR)) {
                 totalLegalBallsBalledInOver ++;
             }
             totalBallsBalled ++;
             System.out.println(ball);
-            ball.handlers.forEach(handlerType -> handlerRegistry.getHandler(handlerType).handle(ball, currentInning));
+            ball.handlers.forEach(handlerType -> handlerRegistry.getHandler(handlerType).handle(ball, currentInning, over.getBowler()));
             if(currentInning.validateInningState() || totalLegalBallsBalledInOver == 6) {
                 break;
             }
         }
-        if(totalBallsBalled != over.size() || (!currentInning.isInningEnded() && totalLegalBallsBalledInOver != 6)) {
+        if(totalBallsBalled != over.getBalls().size() || (!currentInning.isInningEnded() && totalLegalBallsBalledInOver != 6)) {
             throw new RuntimeException("Invalid over given");
         }
         currentInning.displayScoreCard();
         currentInning.strikeChange();
     }
 
-    private void playInning(List<List<String>> overs, Team team1, Team team2) {
+    private void playInning(List<Over> overs, Team team1, Team team2) {
         currentInning = new Inning(this.numOfOvers, team1,team2);
         innings.add(currentInning);
-        for (List<String> over : overs) {
+        for (Over over : overs) {
             if (!currentInning.isInningEnded())
                 playOver(over);
             else
@@ -75,7 +73,7 @@ public class Game {
         }
     }
 
-    public void playGame(List<List<String>> oversForA, List<List<String>> oversForB) {
+    public void playGame(List<Over> oversForA, List<Over> oversForB) {
         playInning(oversForA,team1,team2);
         leadBy = currentInning.getScorecard().getTotalRuns();
         playInning(oversForB,team2,team1);

@@ -4,6 +4,7 @@ import app.sports.cricket.utils.Utils;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ public class Inning {
         this.bowlingTeam = bowlingTeam;
         scorecard = Scorecard.builder()
                 .battingTeamStats(getStatsMapForPlayers(battingTeam.getPlayers(),PlayerBattingStat.class))
+                .bowlingTeamStats(new HashMap<>())
                 .build();
         this.onStrikePlayer = battingTeam.getPlayers().get(0);
         this.nonStrikePlayer = battingTeam.getPlayers().get(1);
@@ -49,6 +51,7 @@ public class Inning {
 
     public void displayScoreCard() {
         Utils.prettyPrintScoreCard(this);
+        System.out.println(this.scorecard.getBowlerStat(currentBowler));
     }
 
     public boolean validateInningState() {

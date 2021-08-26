@@ -3,16 +3,16 @@ package app.sports.cricket.handlers;
 import app.sports.cricket.constants.HandlerTypes;
 import app.sports.cricket.entities.Ball;
 import app.sports.cricket.entities.Inning;
+import app.sports.cricket.entities.Player;
 
 public class ExtraHandler extends Handler {
 
     public ExtraHandler(HandlerRegistry handlerRegistry) {
-        super(handlerRegistry);
-        addHandlerToRegistry(HandlerTypes.EXTRA, this);
+        super(HandlerTypes.EXTRA, handlerRegistry);
     }
 
     @Override
-    public void handle(Ball ball, Inning inning) {
-        inning.getScorecard().addExtras(ball.getRuns());
+    public void handle(Ball ball, Inning inning, Player bowler) {
+        inning.getScorecard().addExtras(ball.getRuns(), bowler);
     }
 }
